@@ -6,25 +6,17 @@
  * @return {object}
  */
 function convertToObject(sourceString) {
-  const styles = {};
-  const lines = sourceString.replace('\n', '').split(';');
+  return sourceString.split(';').reduce((stylesObject, line) => {
+    if (line.includes(':')) {
+      const [property, value] = line.split(':');
+      const newProperty = property.trim();
+      const newValue = value.trim();
 
-  for (let line of lines) {
-    line = line.trim();
-
-    if (!line.includes(':')) {
-      continue;
+      stylesObject[newProperty] = newValue;
     }
 
-    const [property, value] = line.split(':');
-
-    const cleanProperty = property.trim();
-    const cleanValue = value.replace(';', '').trim();
-
-    styles[cleanProperty] = cleanValue;
-  }
-
-  return styles;
+    return stylesObject;
+  }, {});
 }
 
 module.exports = convertToObject;
